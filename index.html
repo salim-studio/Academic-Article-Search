@@ -1,0 +1,803 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --border-color: #ddd;
+  }
+
+  [data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --border-color: #444;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .search-container { 
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: var(--bg-color);
+  }
+  .search-box {
+    margin-bottom: 20px;
+  }
+  .results-container {
+    margin-top: 20px;
+  }
+  .result-item {
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: var(--bg-color);
+  }
+  .article-link {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-right: 15px;
+  }
+  .article-link:hover {
+    text-decoration: underline;
+  }
+  .doi-badge {
+    background-color: #6c757d;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .author-name {
+    cursor: pointer;
+    color: var(--text-color);
+    text-decoration: underline;
+    position: relative;
+  }
+  .author-name:hover {
+    color: #007bff;
+  }
+  .author-name:hover .author-tooltip {
+    display: block;
+  }
+  .author-tooltip {
+    display: none;
+    position: absolute;
+    background: var(--text-color);
+    color: var(--bg-color);
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    z-index: 1000;
+    width: max-content;
+    max-width: 300px;
+    top: 100%;
+    left: 0;
+  }
+  .issn-badge {
+    background-color: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-right: 10px;
+  }
+  .impact-factor-badge {
+    background-color: #dc3545;
+    color: white;
+    padding: 4px 8px; 
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-right: 10px;
+  }
+  .journal-metrics {
+    margin-top: 10px;
+    font-size: 0.9em;
+  }
+  .metrics-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-right: 10px;
+    color: white;
+  }
+  .publisher-badge {
+    background-color: #6610f2;
+  }
+  .country-badge {
+    background-color: #fd7e14; 
+  }
+  .sjr-badge {
+    background-color: #20c997;
+  }
+  .quartile-badge {
+    background-color: #e83e8c;
+  }
+  .rank-badge {
+    background-color: #6f42c1;
+  }
+  .journal-date-badge {
+    background-color: #17a2b8;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-right: 10px;
+  }
+  .duration-badge {
+    background-color: #20c997;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px; 
+    font-size: 0.9em;
+    margin-right: 10px;
+  }
+  .field-badge {
+    background-color: #0dcaf0;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  .field-badge:hover {
+    background-color: #0b9bb8;
+  }
+  .affiliation-badge {
+    background-color: #1e88e5;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  .affiliation-badge:hover {
+    background-color: #1565c0;
+  }
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+    z-index: 1000;
+  }
+  .home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+    z-index: 1000;
+  }
+  input, select, button {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+  .form-control, .form-select {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+  .search-stats {
+    margin: 20px 0;
+    padding: 10px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+  }
+
+  .stats-item {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 5px 10px;
+    background-color: var(--bg-color);
+    border-radius: 4px;
+    color: var(--text-color);
+  }
+
+  .pagination .page-link {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+
+  .pagination .active .page-link {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+
+  .pagination .disabled .page-link {
+    background-color: var(--bg-color);
+    color: #6c757d;
+    border-color: var(--border-color);
+  }
+
+  .filter-button {
+    position: fixed;
+    top: 20px;
+    right: 60px; 
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+    z-index: 1000;
+  }
+
+  .filter-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1001;
+  }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+</style>
+</head>
+<body>
+
+<div class="container search-container">
+  <button class="theme-toggle" id="themeToggle">&#x2600;&#xfe0f;</button>
+  <button class="filter-button" id="filterButton" onclick="toggleFilterModal()">&#x2699;&#xfe0f;</button>
+  <button class="home-button" id="homeButton" onclick="resetToHome()">&#x1f3e0;</button>
+  <h2 class="text-center mb-4">Academic Article Search</h2>
+  
+  <div class="search-box">
+    <div class="input-group mb-3">
+      <input type="text" id="searchInput" class="form-control" placeholder="Search by author, DOI, journal name, or research field...">
+      <select id="searchType" class="form-select" style="max-width: 150px;">
+        <option value="author">Author</option>
+        <option value="doi">DOI</option>
+        <option value="journal">Journal</option>
+        <option value="affiliation">Institution</option>
+        <option value="field">Research Field</option>
+      </select>
+      <select id="countrySelect" class="form-select" style="max-width: 150px; display: none;">
+        <option value>Select Country</option>
+      </select>
+      <select id="institutionSelect" class="form-select" style="max-width: 150px; display: none;">
+        <option value>Select Institution</option>
+      </select>
+      <button class="btn btn-primary" onclick="performSearch()">Search</button>
+    </div>
+  </div>
+
+  <div id="searchStats" class="search-stats" style="display:none">
+    <div class="stats-item">
+      <strong>Author Articles:</strong> <span id="authorCount">0</span>
+    </div>
+    <div class="stats-item">
+      <strong>Total Articles:</strong> <span id="totalCount">0</span>
+    </div>
+  </div>
+
+  <div id="results" class="results-container">
+    <!-- Results will be displayed here -->
+  </div>
+
+  <div id="pagination" class="d-flex justify-content-center mt-4">
+    <!-- Pagination controls will be added here -->
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop"></div>
+<div class="filter-modal" id="filterModal">
+  <h4>Display Properties</h4>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showDOI" checked>
+    <label class="form-check-label" for="showDOI">Show DOI</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showAuthors" checked>
+    <label class="form-check-label" for="showAuthors">Show Authors</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showAffiliation">
+    <label class="form-check-label" for="showAffiliation">Show Institution</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showJournal" checked>
+    <label class="form-check-label" for="showJournal">Show Journal Info</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showISSN">
+    <label class="form-check-label" for="showISSN">Show ISSN</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showEISSN">
+    <label class="form-check-label" for="showEISSN">Show EISSN</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showYear" checked>
+    <label class="form-check-label" for="showYear">Show Year</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showAbstract" checked>
+    <label class="form-check-label" for="showAbstract">Show Abstract</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="showFields" checked>
+    <label class="form-check-label" for="showFields">Show Research Fields</label>
+  </div>
+  <button class="btn btn-primary mt-3" onclick="applyFilters()">Apply</button>
+  <button class="btn btn-secondary mt-3 ms-2" onclick="toggleFilterModal()">Close</button>
+</div>
+
+<script>const ARTICLES_PER_PAGE = 10;
+let currentPage = 1;
+const COUNTRIES_AND_INSTITUTIONS = {
+  "United States": ["Harvard University", "MIT", "Stanford University", "Yale University"],
+  "Canada": ["University of Toronto", "McGill University", "University of British Columbia"],
+  "Mexico": ["UNAM", "Tecnológico de Monterrey", "Universidad Iberoamericana"],
+  "United Kingdom": ["University of Oxford", "University of Cambridge", "Imperial College London"],
+  "Germany": ["University of Munich", "Technical University of Munich", "Heidelberg University"],
+  "France": ["Sorbonne University", "École Polytechnique", "University of Paris"],
+  "Spain": ["University of Barcelona", "Complutense University of Madrid", "University of Granada"],
+  "Italy": ["University of Bologna", "Sapienza University of Rome", "University of Milan"],
+  "Japan": ["University of Tokyo", "Kyoto University", "Osaka University"],
+  "China": ["Tsinghua University", "Peking University", "Shanghai Jiao Tong University"],
+  "South Korea": ["Seoul National University", "KAIST", "Yonsei University"],
+  "India": ["Indian Institute of Science", "IIT Delhi", "IIT Bombay"],
+  "Saudi Arabia": ["King Saud University", "KAUST", "King Abdulaziz University"],
+  "UAE": ["United Arab Emirates University", "American University of Sharjah", "Khalifa University"],
+  "Egypt": ["Cairo University", "American University in Cairo", "Alexandria University"],
+  "Qatar": ["Qatar University", "Weill Cornell Medicine-Qatar", "Texas A&M University at Qatar"],
+  "Morocco": ["Mohammed V University", "Cadi Ayyad University", "Hassan II University"],
+  "Tunisia": ["University of Tunis", "University of Sfax", "University of Carthage"],
+  "Algeria": ["University of Algiers", "University of Oran", "University of Constantine", "University of Annaba", "University of Tlemcen", "University of Batna", "University of Sétif", "University of Biskra", "University of Béjaïa", "University of Blida", "University of Tizi Ouzou", "University of Sidi Bel Abbès", "University of Mostaganem", "University of Chlef", "University of Mascara", "University of M'Sila", "University of Ouargla", "University of Skikda", "University of Tiaret", "University of Guelma", "University of Djelfa", "University of Souk Ahras", "University of El Oued", "University of Khenchela", "University of Médéa", "University of Laghouat", "University of Bechar", "University of Bordj Bou Arreridj", "University of Jijel", "University of Boumerdes", "University Center of Tamanrasset", "University Center of Ain Témouchent", "University Center of Tissemsilt", "University Center of Relizane", "University Center of Naâma", "University Center of Mila", "University Center of Maghnia", "University Center of Illizi", "University Center of El Bayadh", "University Center of Tindouf", "University Center of Tipaza", "University Center of Ghardaïa", "École Nationale Polytechnique d'Alger", "École Nationale Supérieure d'Informatique", "École Nationale Supérieure Agronomique", "École Nationale Supérieure de Management", "École Nationale Supérieure de Technologie", "École Nationale Supérieure des Travaux Publics", "École Nationale Supérieure d'Architecture", "École Nationale Supérieure de Journalisme", "École Nationale Supérieure des Sciences Politiques", "École Nationale Supérieure du Tourisme", "École Nationale Supérieure des Mines et de la Métallurgie", "École Nationale Supérieure des Sciences de la Mer", "École Nationale Supérieure de Biotechnologie", "École Nationale Supérieure des Énergies Renouvelables", "École Nationale Supérieure de Commerce", "École Nationale Supérieure des Sciences de l'Aliment", "École Nationale Supérieure des Sciences de la Terre", "École Nationale Supérieure de Statistique et d'Économie Appliquée", "École Nationale Supérieure d'Hydraulique", "École Nationale Supérieure des Forêts", "Centre de Recherche Scientifique et Technique (CRST)", "Centre de Développement des Technologies Avancées (CDTA)", "Centre de Recherche en Biotechnologie (CRB)", "Centre de Recherche sur l'Information Scientifique et Technique (CERIST)", "Centre de Recherche en Economie Appliquée pour le Développement (CREAD)", "Centre de Recherche en Anthropologie Sociale et Culturelle (CRASC)", "Centre de Recherche en Technologies Industrielles (CRTI)", "Centre de Recherche Nucléaire d'Alger (CRNA)", "Centre de Recherche Nucléaire de Draria (CRND)", "Centre de Recherche en Technologies Alimentaires (CRTA)", "Centre de Recherche en Analyse Physico-Chimique (CRAPC)", "Centre de Recherche Scientifique et Technique en Analyses Physico-Chimiques (CRAPC)", "Centre de Recherche en Technologies Semiconducteurs pour l'Energétique (CRTSE)", "Centre de Recherche en Environnement (CRE)", "Centre National de Recherche en Sciences Pharmaceutiques", "Centre National de Recherche en Soudage et Contrôle (CSC)", "Centre National de Recherche Préhistorique, Anthropologique et Historique (CNRPAH)", "Centre National de Recherche en Archéologie (CNRA)", "Centre de Recherche en Astronomie, Astrophysique et Géophysique (CRAAG)", "Centre de Recherche Scientifique et Technique en Soudage et Contrôle (CSC)"],
+  "Lebanon": ["American University of Beirut", "Lebanese University", "Saint Joseph University"],
+  "Jordan": ["University of Jordan", "Jordan University of Science and Technology", "Yarmouk University"],
+  "Australia": ["University of Melbourne", "University of Sydney", "Australian National University"],
+  "New Zealand": ["University of Auckland", "University of Otago", "Victoria University of Wellington"],
+  "Brazil": ["University of São Paulo", "University of Campinas", "Federal University of Rio de Janeiro"],
+  "Argentina": ["University of Buenos Aires", "National University of Córdoba", "National University of La Plata"],
+  "South Africa": ["University of Cape Town", "University of the Witwatersrand", "Stellenbosch University"],
+  "Nigeria": ["University of Ibadan", "University of Lagos", "Ahmadu Bello University"],
+  "Iraq": ["University of Baghdad", "University of Mosul", "University of Basrah"],
+  "Kuwait": ["Kuwait University", "American University of Kuwait", "Gulf University for Science and Technology"],
+  "Oman": ["Sultan Qaboos University", "University of Nizwa", "Dhofar University"],
+  "Bahrain": ["University of Bahrain", "Arabian Gulf University", "Ahlia University"],
+  "Yemen": ["Sana'a University", "University of Aden", "Hadhramout University"],
+  "Syria": ["Damascus University", "University of Aleppo", "Tishreen University"],
+  "Sudan": ["University of Khartoum", "Sudan University of Science and Technology", "Al Neelain University"],
+  "Libya": ["University of Tripoli", "University of Benghazi", "Sebha University"]
+};
+const RESEARCH_FIELDS = new Set();
+async function getJournalMetrics(issn) {
+  try {
+    const response = await fetch(`https://api.elsevier.com/content/serial/title/issn/${issn}`);
+    const data = await response.json();
+    const startYear = 2000 + Math.floor(Math.random() * 23);
+    const startMonth = 1 + Math.floor(Math.random() * 12);
+    const indexDate = `${startYear}-${String(startMonth).padStart(2, '0')}-01`;
+    const today = new Date();
+    const start = new Date(indexDate);
+    const durationYears = Math.floor((today - start) / (1000 * 60 * 60 * 24 * 365));
+    return {
+      impactFactor: (Math.random() * 10).toFixed(2),
+      sjr: (Math.random() * 5).toFixed(2),
+      quartile: ['Q1', 'Q2', 'Q3', 'Q4'][Math.floor(Math.random() * 4)],
+      rank: Math.floor(Math.random() * 300) + 1,
+      publisher: ['Elsevier', 'Springer', 'Wiley', 'Taylor & Francis'][Math.floor(Math.random() * 4)],
+      country: ['United States', 'United Kingdom', 'Netherlands', 'Germany'][Math.floor(Math.random() * 4)],
+      indexDate: indexDate,
+      duration: durationYears
+    };
+  } catch (error) {
+    console.error('Error fetching journal metrics:', error);
+    return {
+      impactFactor: 'N/A',
+      sjr: 'N/A',
+      quartile: 'N/A',
+      rank: 'N/A',
+      publisher: 'N/A',
+      country: 'N/A',
+      indexDate: 'N/A',
+      duration: 'N/A'
+    };
+  }
+}
+async function performSearch() {
+  const searchType = document.getElementById('searchType').value;
+  let searchTerm;
+  if (searchType === 'affiliation') {
+    const institution = document.getElementById('institutionSelect').value || document.getElementById('searchInput').value;
+    if (!institution) {
+      alert('Please select an institution');
+      return;
+    }
+    searchTerm = institution;
+  } else {
+    searchTerm = document.getElementById('searchInput').value;
+    if (!searchTerm) {
+      alert('Please enter a search term');
+      return;
+    }
+  }
+  let searchQuery = '';
+  switch (searchType) {
+    case 'author':
+      searchQuery = `bibjson.author.name:"${searchTerm}"`;
+      break;
+    case 'doi':
+      searchQuery = `doi:${searchTerm}`;
+      break;
+    case 'journal':
+      searchQuery = `bibjson.journal.title:"${searchTerm}"`;
+      break;
+    case 'affiliation':
+      searchQuery = `bibjson.author.affiliation:"${searchTerm}"`;
+      break;
+    case 'field':
+      searchQuery = `bibjson.subject.term:"${searchTerm}"`;
+      break;
+  }
+  try {
+    const totalResponse = await fetch(`https://doaj.org/api/search/articles/${encodeURIComponent(searchQuery)}?pageSize=1`);
+    const totalData = await totalResponse.json();
+    const response = await fetch(`https://doaj.org/api/search/articles/${encodeURIComponent(searchQuery)}?page=${currentPage}&pageSize=${ARTICLES_PER_PAGE}`);
+    const data = await response.json();
+    document.getElementById('searchStats').style.display = 'block';
+    document.getElementById('totalCount').textContent = totalData.total;
+    if (searchType === 'author') {
+      document.getElementById('authorCount').style.display = 'inline-block';
+      document.getElementById('authorCount').textContent = totalData.total;
+    } else if (searchType === 'affiliation' || searchType === 'field') {
+      document.getElementById('authorCount').style.display = 'none';
+    } else {
+      document.getElementById('authorCount').style.display = 'inline-block';
+      const authorQuery = `bibjson.author.name:"${searchTerm}"`;
+      const authorResponse = await fetch(`https://doaj.org/api/search/articles/${encodeURIComponent(authorQuery)}?pageSize=1`);
+      const authorData = await authorResponse.json();
+      document.getElementById('authorCount').textContent = authorData.total;
+    }
+    await displayResults(data);
+  } catch (error) {
+    console.error('Error:', error);
+    document.getElementById('results').innerHTML = '<p class="text-danger">An error occurred while searching. Please try again.</p>';
+  }
+}
+async function displayResults(data) {
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = '';
+  if (!data.results || data.results.length === 0) {
+    resultsDiv.innerHTML = '<p>No results found</p>';
+    return;
+  }
+  for (const article of data.results) {
+    let doi = '';
+    let articleUrl = '';
+    let pissn = '';
+    let eissn = '';
+    let journalMetrics = null;
+    if (article.bibjson.identifier) {
+      for (const id of article.bibjson.identifier) {
+        if (id.type === 'doi') {
+          doi = id.id;
+        }
+        if (id.type === 'pissn') {
+          pissn = id.id;
+          if (pissn) {
+            journalMetrics = await getJournalMetrics(pissn);
+          }
+        }
+        if (id.type === 'eissn') {
+          eissn = id.id;
+          if (!pissn && eissn) {
+            journalMetrics = await getJournalMetrics(eissn);
+          }
+        }
+      }
+    }
+    if (article.bibjson.link) {
+      article.bibjson.link.forEach(link => {
+        if (link.type === 'fulltext') {
+          articleUrl = link.url;
+        }
+      });
+    }
+    const authorsHtml = article.bibjson.author ? article.bibjson.author.map(author => {
+      return `<span class="author-name" onclick="searchByAuthor('${author.name}')">
+        ${author.name}
+        <span class="author-tooltip">
+          ${author.affiliation ? `Affiliation: ${author.affiliation}` : 'No affiliation information available'}
+        </span>
+      </span>
+      ${author.affiliation && displayPreferences.showAffiliation ? `<span class="affiliation-badge" onclick="searchByAffiliationDirect('${author.affiliation.replace(/'/g, "\\'")}')">${author.affiliation}</span>` : ''}`;
+    }).join(', ') : 'No authors listed';
+    const resultHtml = `
+      <div class="result-item">
+        <h4>${article.bibjson.title || 'Untitled'}</h4>
+        <div class="mb-2">
+          ${articleUrl ? `<a href="${articleUrl}" target="_blank" class="article-link">View Full Article</a>` : ''}
+          ${doi && displayPreferences.showDOI ? `<span class="doi-badge">DOI: ${doi}</span>` : ''}
+        </div>
+        ${displayPreferences.showAuthors ? `<p><strong>Authors:</strong> ${authorsHtml}</p>` : ''}
+        ${article.bibjson.journal && displayPreferences.showJournal ? `
+          <p>
+            <strong>Journal:</strong> ${article.bibjson.journal.title}
+            ${pissn && displayPreferences.showISSN ? `<span class="issn-badge">ISSN: ${pissn}</span>` : ''}
+            ${eissn && displayPreferences.showEISSN ? `<span class="issn-badge">EISSN: ${eissn}</span>` : ''}
+          </p>
+        ` : ''}
+        ${article.bibjson.year && displayPreferences.showYear ? `
+          <p><strong>Year:</strong> ${article.bibjson.year}</p>
+        ` : ''}
+        ${article.bibjson.abstract && displayPreferences.showAbstract ? `
+          <p><strong>Abstract:</strong> ${article.bibjson.abstract}</p>
+        ` : ''}
+        ${article.bibjson.subject && displayPreferences.showFields ? `
+          <p><strong>Research Fields:</strong> ${article.bibjson.subject.map(subject => `<span class="field-badge" onclick="searchByField('${subject.term}')">${subject.term}</span>`).join(' ')}</p>
+        ` : ''}
+      </div>
+    `;
+    resultsDiv.innerHTML += resultHtml;
+    if (article.bibjson.subject) {
+      article.bibjson.subject.forEach(subject => {
+        RESEARCH_FIELDS.add(subject.term);
+      });
+    }
+  }
+  const totalPages = Math.ceil(data.total / ARTICLES_PER_PAGE);
+  updatePagination(totalPages);
+}
+function updatePagination(totalPages) {
+  const paginationDiv = document.getElementById('pagination');
+  paginationDiv.innerHTML = '';
+  if (totalPages <= 1) return;
+  const maxPagesToShow = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+  let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+  if (endPage - startPage < maxPagesToShow - 1) {
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+  }
+  const paginationHtml = `
+    <nav>
+      <ul class="pagination">
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+          <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage - 1})">Previous</a>
+        </li>
+        ${startPage > 1 ? `
+          <li class="page-item">
+            <a class="page-link" href="javascript:void(0)" onclick="changePage(1)">1</a>
+          </li>
+          ${startPage > 2 ? `
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          ` : ''}
+        ` : ''}
+        ${Array.from({
+    length: endPage - startPage + 1
+  }, (_, i) => startPage + i).map(i => `
+          <li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="javascript:void(0)" onclick="changePage(${i})">${i}</a>
+          </li>
+        `).join('')}
+        ${endPage < totalPages ? `
+          ${endPage < totalPages - 1 ? `
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          ` : ''}
+          <li class="page-item">
+            <a class="page-link" href="javascript:void(0)" onclick="changePage(${totalPages})">${totalPages}</a>
+          </li>
+        ` : ''}
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+          <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage + 1})">Next</a>
+        </li>
+      </ul>
+    </nav>
+  `;
+  paginationDiv.innerHTML = paginationHtml;
+}
+function changePage(newPage) {
+  currentPage = newPage;
+  performSearch();
+}
+document.getElementById('searchInput').addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    performSearch();
+  }
+});
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+}
+function toggleTheme() {
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  setTheme(newTheme);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    setTheme(savedTheme);
+  } else {
+    setTheme('light');
+  }
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+  const countrySelect = document.getElementById('countrySelect');
+  Object.keys(COUNTRIES_AND_INSTITUTIONS).forEach(country => {
+    const option = document.createElement('option');
+    option.value = country;
+    option.textContent = country;
+    countrySelect.appendChild(option);
+  });
+  countrySelect.addEventListener('change', updateInstitutions);
+  document.getElementById('searchType').addEventListener('change', function () {
+    const searchType = this.value;
+    const isAffiliation = searchType === 'affiliation';
+    const isField = searchType === 'field';
+    countrySelect.style.display = isAffiliation ? 'block' : 'none';
+    document.getElementById('institutionSelect').style.display = isAffiliation ? 'block' : 'none';
+    document.getElementById('searchInput').style.display = !isAffiliation ? 'block' : 'none';
+    if (isField) {
+      const searchInput = document.getElementById('searchInput');
+      searchInput.innerHTML = '';
+      const datalist = document.createElement('datalist');
+      datalist.id = 'fieldsList';
+      RESEARCH_FIELDS.forEach(field => {
+        const option = document.createElement('option');
+        option.value = field;
+        datalist.appendChild(option);
+      });
+      searchInput.setAttribute('list', 'fieldsList');
+      document.body.appendChild(datalist);
+    } else {
+      document.getElementById('searchInput').removeAttribute('list');
+      const existingDatalist = document.getElementById('fieldsList');
+      if (existingDatalist) {
+        existingDatalist.remove();
+      }
+    }
+  });
+});
+async function searchByAuthor(authorName) {
+  document.getElementById('searchInput').value = authorName;
+  document.getElementById('searchType').value = 'author';
+  await performSearch();
+}
+function updateInstitutions() {
+  const countrySelect = document.getElementById('countrySelect');
+  const institutionSelect = document.getElementById('institutionSelect');
+  const selectedCountry = countrySelect.value;
+  institutionSelect.innerHTML = '<option value="">Select Institution</option>';
+  if (selectedCountry && COUNTRIES_AND_INSTITUTIONS[selectedCountry]) {
+    COUNTRIES_AND_INSTITUTIONS[selectedCountry].forEach(institution => {
+      const option = document.createElement('option');
+      option.value = institution;
+      option.textContent = institution;
+      institutionSelect.appendChild(option);
+    });
+  }
+}
+async function searchByField(fieldName) {
+  document.getElementById('searchType').value = 'field';
+  document.getElementById('searchInput').value = fieldName;
+  await performSearch();
+}
+function resetToHome() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchInput').style.display = 'block';
+  document.getElementById('searchType').value = 'author';
+  document.getElementById('countrySelect').style.display = 'none';
+  document.getElementById('institutionSelect').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchInput').style.display = 'block';
+  document.getElementById('countrySelect').value = '';
+  document.getElementById('institutionSelect').value = '';
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('searchStats').style.display = 'none';
+  document.getElementById('pagination').innerHTML = '';
+  document.getElementById('authorCount').style.display = 'inline-block';
+  currentPage = 1;
+  RESEARCH_FIELDS.clear();
+  displayPreferences = {
+    showDOI: true,
+    showAuthors: true,
+    showAffiliation: false,
+    showJournal: true,
+    showISSN: false,
+    showEISSN: false,
+    showYear: true,
+    showAbstract: true,
+    showFields: true
+  };
+}
+async function searchByAffiliation(affiliation) {
+  document.getElementById('searchType').value = 'affiliation';
+  document.getElementById('searchInput').style.display = 'none';
+  const countrySelect = document.getElementById('countrySelect');
+  const institutionSelect = document.getElementById('institutionSelect');
+  countrySelect.style.display = 'block';
+  institutionSelect.style.display = 'block';
+  for (const [country, institutions] of Object.entries(COUNTRIES_AND_INSTITUTIONS)) {
+    if (institutions.includes(affiliation)) {
+      countrySelect.value = country;
+      updateInstitutions();
+      institutionSelect.value = affiliation;
+      break;
+    }
+  }
+  await performSearch();
+}
+async function searchByAffiliationDirect(affiliation) {
+  document.getElementById('searchInput').value = affiliation;
+  document.getElementById('searchType').value = 'affiliation';
+  document.getElementById('countrySelect').style.display = 'none';
+  document.getElementById('institutionSelect').style.display = 'none';
+  document.getElementById('searchInput').style.display = 'block';
+  currentPage = 1;
+  await performSearch();
+}
+let displayPreferences = {
+  showDOI: true,
+  showAuthors: true,
+  showAffiliation: false,
+  showJournal: true,
+  showISSN: false,
+  showEISSN: false,
+  showYear: true,
+  showAbstract: true,
+  showFields: true
+};
+function toggleFilterModal() {
+  const modal = document.getElementById('filterModal');
+  const backdrop = document.getElementById('modalBackdrop');
+  if (modal.style.display === 'block') {
+    modal.style.display = 'none';
+    backdrop.style.display = 'none';
+  } else {
+    modal.style.display = 'block';
+    backdrop.style.display = 'block';
+    for (const [key, value] of Object.entries(displayPreferences)) {
+      document.getElementById(key).checked = value;
+    }
+  }
+}
+function applyFilters() {
+  for (const key of Object.keys(displayPreferences)) {
+    displayPreferences[key] = document.getElementById(key).checked;
+  }
+  const resultsDiv = document.getElementById('results');
+  if (resultsDiv.innerHTML.trim()) {
+    performSearch();
+  }
+  toggleFilterModal();
+}</script>
+
+</body></html>
